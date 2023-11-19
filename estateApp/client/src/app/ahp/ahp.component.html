@@ -1,0 +1,82 @@
+<div class="flex flex-col items-center justify-center">
+    <h2 class="text-2xl text-gray-800 font-semibold my-4">Macierz AHP</h2>
+    <p class="text-md text-gray-600 max-w-[80vw] text-center mb-4">
+      Wpisz wartości do macierzy AHP. Użyj skali od 1 do 9, gdzie 1 oznacza równą ważność, 
+      a 9 oznacza wyjątkowo silną ważność jednego elementu nad drugim.
+    </p>
+    <div class="overflow-x-auto">
+      <table class="table-auto text-sm text-center text-gray-700 m-4">
+        <thead class="text-xs text-gray-800 uppercase bg-gray-200">
+          <tr>
+            <th class="p-4"></th>
+            <th class="p-4" *ngFor="let header of headers">{{ header }}</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white text-xs text-center text-gray-800 uppercase">
+          <tr class="h-[20vh]">
+            <th class="bg-gray-200">Lokalizacja</th>
+            <td>
+                <input class="w-full h-[20vh] bg-gray-50 text-xl text-center text-gray-800" type="text" value="1" disabled>
+            </td>
+            <td>
+              <input class="w-full h-[20vh] bg-gray-50 text-xl text-center text-gray-800" [(ngModel)]="loc_price">
+            </td>
+            <td>
+              <input class="w-full h-[20vh] bg-gray-50 text-xl text-center text-gray-800" [(ngModel)]="loc_m2">
+            </td>
+            <td>
+              <input class="w-full h-[20vh] bg-gray-50 text-xl text-center text-gray-800" [(ngModel)]="loc_access">
+            </td>
+          </tr>
+          <tr class="h-[20vh]">
+            <th class="bg-gray-200">Cena</th>
+            <td>
+                <input class="w-full h-[20vh] bg-gray-50 text-xl text-center text-gray-800" type="text" [value]="1/loc_price" disabled>
+            </td>
+            <td>
+              <input class="w-full h-[20vh] bg-gray-50 text-xl text-center text-gray-800" type="text" value="1" disabled>
+            </td>
+            <td>
+              <input class="w-full h-[20vh] bg-gray-50 text-xl text-center text-gray-800" [(ngModel)]="price_m2">
+            </td>
+            <td>
+              <input class="w-full h-[20vh] bg-gray-50 text-xl text-center text-gray-800" [(ngModel)]="price_access">
+            </td>
+          </tr>
+          <tr class="h-[20vh]">
+            <th class="bg-gray-200">Metraż</th>
+            <td>
+                <input class="w-full h-[20vh] bg-gray-50 text-xl text-center text-gray-800"  type="text" [value]="1/loc_m2" disabled>
+            </td>
+            <td>
+              <input class="w-full h-[20vh] bg-gray-50 text-xl text-center text-gray-800" type="text" [value]="1/price_m2" disabled>
+            </td>
+            <td>
+              <input class="w-full h-[20vh] bg-gray-50 text-xl text-center text-gray-800" type="text" value="1" disabled>
+            </td>
+            <td>
+              <input class="w-full h-[20vh] bg-gray-50 text-xl text-center text-gray-800" type="text" [(ngModel)]="m2_access">
+            </td>
+          </tr>
+          <tr class="h-[20vh]">
+            <th class="bg-gray-200">Dostępność wybranych punktów</th>
+            <td>
+                <input class="w-full h-[20vh] bg-gray-50 text-xl text-center text-gray-800"  type="text" [value]="1/loc_access" disabled>
+            </td>
+            <td>
+              <input class="w-full h-[20vh] bg-gray-50 text-xl text-center text-gray-800" type="text" [value]="1/price_access" disabled>
+            </td>
+            <td>
+              <input class="w-full h-[20vh] bg-gray-50 text-xl text-center text-gray-800" [value]="1/m2_access" disabled>
+            </td>
+            <td>
+              <input class="w-full h-[20vh] bg-gray-50 text-xl text-center text-gray-800" type="text" value="1" disabled>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <button (click)="onSubmit()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">      Zatwierdź dane
+    </button>
+  </div>
+  
