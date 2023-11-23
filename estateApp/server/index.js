@@ -27,25 +27,22 @@ app.post('/ahp', (req,res) => {
   places = req.body.places
   ahpValues = req.body.ahpValues
   /// Calculate ahp user weights
-  loc_weight_sum = 1 * Number(ahpValues.loc_price) * Number(ahpValues.loc_m2) * Number(ahpValues.loc_access)
-  price_weight_sum = Number(1/ahpValues.loc_price) * 1 * Number(ahpValues.price_m2) * Number(ahpValues.price_access)  
-  m2_weight_sum = Number(1/ahpValues.loc_m2) * Number(1/ahpValues.price_m2) * 1 * Number(ahpValues.m2_access)
-  access_weight_sum = Number(1/ahpValues.loc_access) + Number(1/ahpValues.price_access) + Number(1/ahpValues.m2_access) + 1
+  loc_values_mul = 1 * Number(ahpValues.loc_price) * Number(ahpValues.loc_m2) * Number(ahpValues.loc_access)
+  price_values_mul = Number(1/ahpValues.loc_price) * 1 * Number(ahpValues.price_m2) * Number(ahpValues.price_access)  
+  m2_values_mul = Number(1/ahpValues.loc_m2) * Number(1/ahpValues.price_m2) * 1 * Number(ahpValues.m2_access)
+  access_values_mul = Number(1/ahpValues.loc_access) * Number(1/ahpValues.price_access) * Number(1/ahpValues.m2_access) + 1
   //
-  weights_sum = loc_weight_sum + price_weight_sum + m2_weight_sum + access_weight_sum
+  loc_values_pow = Math.pow(loc_values_mul, 0.25)
+  price_values_pow = Math.pow(price_values_mul, 0.25)
+  m2_values_pow = Math.pow(m2_values_mul, 0.25)
+  access_values_pow = Math.pow(access_values_mul, 0.25)
   //
-  distance_w = loc_weight_sum/weights_sum
-  price_w = price_weight_sum/weights_sum
-  m2_w = m2_weight_sum/weights_sum
-  access_w = access_weight_sum/weights_sum
-
-  console.log("Wspolczynniki AHP:")
-  console.log("Lokalizacja", loc_weight_sum/weights_sum)
-  console.log("Cena", price_weight_sum/weights_sum)
-  console.log("Metraż", m2_weight_sum/weights_sum)
-  console.log("Zgodność z punktami", access_weight_sum/weights_sum)
-
-  console.log( loc_weight_sum/weights_sum + price_weight_sum/weights_sum + m2_weight_sum/weights_sum + access_weight_sum/weights_sum)
+  weights_sum = loc_values_pow + price_values_pow + m2_values_pow + access_values_pow
+  //
+  distance_weight = loc_values_pow/weights_sum
+  price_weight = price_values_pow/weights_sum
+  m2_weight = m2_values_pow/weights_sum
+  access_weight = access_values_pow/weights_sum
 
   try {
     const json_url = './estateInfo2.json'
@@ -96,19 +93,17 @@ app.post('/ahp', (req,res) => {
       property.places_score = roundedScore
 
       property.result = 
-        property.distance_score * distance_w 
-      + property.m2_score * m2_w 
-      + property.price_score * price_w
-      + property.places_score * access_w
+        property.distance_score * distance_weight 
+      + property.m2_score * m2_weight 
+      + property.price_score * price_weight
+      + property.places_score * access_weight
 
       console.log(property)
     });
     
-    
-
-
-
-
+    propertiesWithinDistance.sort((a, b) => b.result - a.result);
+    const top10Properties = propertiesWithinDistance.slice(0, 10);
+    res.json(top10Properties);
     
   } catch (blad) {
     console.error('Wystąpił błąd:', blad);

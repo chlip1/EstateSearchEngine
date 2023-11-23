@@ -33,16 +33,6 @@ export class AhpComponent {
       "m2_access" : this.m2_access
     }
     this.storageService.set("ahpValues", ahpValues)
-
-    const data = this.storageService.getAll()
-
-    this.apiService.sendAhpValues(data).subscribe({
-      next: () => {
-        this.router.navigate(['/photos']);
-      },
-      error: (error) => {
-        console.error('Wystąpił błąd podczas wysyłania danych:', error);
-      }
-    });
+    this.router.navigate(['/photos'])
   }
 }

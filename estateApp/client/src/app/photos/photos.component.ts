@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { Property } from './property.model';
 import { HttpClient } from '@angular/common/http';
+import { ApiService } from '../api.service';
+import { StorageService } from '../storage.service';
 
 @Component({
   selector: 'app-photos',
@@ -9,9 +11,13 @@ import { HttpClient } from '@angular/common/http';
 })
 export class PhotosComponent {
   currentIndex: number = 0;
-  properties: Property[] = [];
+  properties: any = [];
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private apiService: ApiService,
+    private storageService: StorageService
+    ) { }
 
   ngOnInit(): void {
     this.loadProperties();
@@ -27,9 +33,17 @@ export class PhotosComponent {
   
 
   loadProperties(): void {
-    this.http.get<Property[]>('assets/file.json').subscribe(data => {
-      this.properties = data;
-      console.log(this.properties)
+    const data = this.storageService.getAll()
+
+    this.apiService.sendAhpValues(data).subscribe({
+      next: (res) => {
+        console.log(res)
+        this.properties = res
+        console.log(this.properties)
+      },
+      error: (error) => {
+        console.error('Wystąpił błąd podczas wysyłania danych:', error);
+      }
     });
   }
 }
